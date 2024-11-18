@@ -49,7 +49,9 @@ class Optimizer(torch.nn.Module):
         self.continuous_lr = continuous_lr
         self.discrete_lr = discrete_lr
         self.batch_size = batch_size
-        self.device = torch.device("cuda")
+        
+        dev = "cuda" if torch.cuda.is_available() else "cpu"
+        self.device = torch.device(dev)
 
         self.parameter_module = ParameterModule(self.parameter_dict)
         self.starting_parameters_continuous = self.parameter_module.tensor("continuous")
