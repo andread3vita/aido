@@ -74,7 +74,7 @@ class SurrogateDataset(Dataset):
             context_key: str = "Context",
             target_key: str = "Targets",
             reconstructed_key: str = "Reconstructed",
-            device: str = "cuda",
+            device: str = "cpu",
             means: List[np.float32] | None = None,
             stds: List[np.float32] | None = None
             ):
@@ -237,7 +237,10 @@ class Surrogate(torch.nn.Module):
         self.optimizer = torch.optim.Adam(self.parameters(), lr=0.01)
         self.surrogate_loss = []
         self.n_time_steps = n_time_steps
-        self.device = torch.device('cuda')
+        
+        dev = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.device = torch.device(dev)
+        
         self.t_is = torch.tensor([i / self.n_time_steps for i in range(self.n_time_steps + 1)]).to(self.device)
 
         for k, v in ddpm_schedules(*betas, n_time_steps).items():

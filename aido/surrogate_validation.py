@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 from torch.utils.data import DataLoader
 
+import torch
 from aido.surrogate import Surrogate, SurrogateDataset
 
 
@@ -15,7 +16,9 @@ class SurrogateValidation():
             surrogate_model: Surrogate,
             ):
         self.surrogate_model = surrogate_model
-        self.device = "cuda"
+        
+        dev = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.device = dev
 
     def validate(
             self,
